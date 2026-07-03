@@ -3,8 +3,6 @@
 [![Pub Version](https://img.shields.io/pub/v/flutter_smart_refresh)](https://pub.dev/packages/flutter_smart_refresh)
 [![Dart SDK](https://img.shields.io/badge/dart-%5E3.12.0-blue)](https://dart.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-iOS%7CAndroid-blue)](https://flutter.dev)
-[![Null Safety](https://img.shields.io/badge/null-safety-ready-brightgreen)](https://dart.dev/null-safety)
 
 ## ⚠️ Fork 说明
 
