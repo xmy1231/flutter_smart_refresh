@@ -1,0 +1,52 @@
+name: Publish to pub.dev
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+
+      - name: Extract version from tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          TAG_VERSION=${TAG#v}
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+
+      - name: Get version from pubspec.yaml
+        run: |
+          VERSION=$(grep -E '^version:' pubspec.yaml | sed 's/version: //' | tr -d '"')
+          echo "PUBSPEC_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Verify version match
+        run: |
+          if [ "$TAG_VERSION" != "$PUBSPEC_VERSION" ]; then
+            echo "Version mismatch!"
+            echo "Tag version: $TAG_VERSION"
+            echo "pubspec version: $PUBSPEC_VERSION"
+            exit 1
+          fi
+          echo "Version verified: $PUBSPEC_VERSION"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Publish to pub.dev
+        run: flutter pub publish --force
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
